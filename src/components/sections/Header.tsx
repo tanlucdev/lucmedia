@@ -1,20 +1,24 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { Phone, Menu, X } from "lucide-react";
+import { Phone, Menu, X, ChevronDown } from "lucide-react";
 import { CONTACT } from "@/data/services";
 
-const nav = [
-  { href: "#features", label: "Tính năng" },
-  { href: "#packages", label: "Gói dịch vụ" },
-  { href: "#pricing", label: "Bảng giá" },
-  { href: "#security", label: "Bảo mật" },
+const SERVICE_DROPDOWN = [
+  { href: "/#packages", label: "Buff Like / Follow / View" },
+  { href: "/chay-quang-cao", label: "Chạy Quảng Cáo Facebook" },
+  { href: "/loi-ich", label: "Lợi ích theo nền tảng" },
 ];
 
 function scrollTo(id: string, closeMenu?: () => void) {
   closeMenu?.();
+  // If we're not on the home page, navigate there first
+  if (typeof window !== "undefined" && window.location.pathname !== "/") {
+    window.location.href = id;
+    return;
+  }
   const el = document.querySelector(id);
   if (!el) return;
   const offset = 88;
@@ -22,21 +26,54 @@ function scrollTo(id: string, closeMenu?: () => void) {
   window.scrollTo({ top, behavior: "smooth" });
 }
 
+function ServiceDropdown({ onClose }: { onClose?: () => void }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 6, scale: 0.97 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: 6, scale: 0.97 }}
+      transition={{ duration: 0.15 }}
+      className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-56 glass-strong rounded-2xl overflow-hidden shadow-xl z-50"
+    >
+      {SERVICE_DROPDOWN.map((item) => (
+        <a
+          key={item.href}
+          href={item.href}
+          onClick={onClose}
+          className="flex items-center px-4 py-3 text-sm text-white/80 hover:text-white hover:bg-white/[0.07] transition"
+        >
+          {item.label}
+        </a>
+      ))}
+    </motion.div>
+  );
+}
+
 export function Header() {
   const [open, setOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close mobile menu on resize to desktop
   useEffect(() => {
     const fn = () => { if (window.innerWidth >= 1024) setOpen(false); };
     window.addEventListener("resize", fn);
     return () => window.removeEventListener("resize", fn);
   }, []);
 
-  // Prevent body scroll when menu open
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [open]);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <>
@@ -71,15 +108,49 @@ export function Header() {
 
             {/* Desktop nav */}
             <nav className="hidden lg:flex items-center gap-1 rounded-full bg-white/[0.03] border border-white/5 px-1.5 py-1.5">
-              {nav.map((item) => (
+              <button
+                onClick={() => scrollTo("#features")}
+                className="px-4 py-1.5 text-sm text-white/70 hover:text-white rounded-full hover:bg-white/[0.06] transition"
+              >
+                Tính năng
+              </button>
+
+              {/* Dịch vụ dropdown */}
+              <div className="relative" ref={dropdownRef}>
                 <button
-                  key={item.href}
-                  onClick={() => scrollTo(item.href)}
-                  className="px-4 py-1.5 text-sm text-white/70 hover:text-white rounded-full hover:bg-white/[0.06] transition"
+                  onClick={() => setDropdownOpen((p) => !p)}
+                  className="flex items-center gap-1 px-4 py-1.5 text-sm text-white/70 hover:text-white rounded-full hover:bg-white/[0.06] transition"
                 >
-                  {item.label}
+                  Dịch vụ
+                  <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`} />
                 </button>
-              ))}
+                <AnimatePresence>
+                  {dropdownOpen && (
+                    <ServiceDropdown onClose={() => setDropdownOpen(false)} />
+                  )}
+                </AnimatePresence>
+              </div>
+
+              <a
+                href="/bang-gia"
+                className="px-4 py-1.5 text-sm text-white/70 hover:text-white rounded-full hover:bg-white/[0.06] transition"
+              >
+                Bảng giá
+              </a>
+              <a
+                href="/chay-quang-cao"
+                className="px-4 py-1.5 text-sm text-white/70 hover:text-white rounded-full hover:bg-white/[0.06] transition"
+              >
+                Chạy Quảng Cáo
+              </a>
+              <a
+                href={CONTACT.zalo}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-1.5 text-sm text-white/70 hover:text-white rounded-full hover:bg-white/[0.06] transition"
+              >
+                Liên hệ
+              </a>
             </nav>
 
             {/* Right actions */}
@@ -91,13 +162,13 @@ export function Header() {
                 <Phone className="h-4 w-4" />
                 <span className="font-medium tabular-nums">{CONTACT.phoneDisplay}</span>
               </a>
-              <button
-                onClick={() => scrollTo("#pricing")}
+              <a
+                href="/bang-gia"
                 className="btn-primary hidden sm:inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-semibold text-white transition"
               >
                 Đặt ngay
                 <span aria-hidden>→</span>
-              </button>
+              </a>
               {/* Hamburger */}
               <button
                 onClick={() => setOpen((p) => !p)}
@@ -121,38 +192,61 @@ export function Header() {
             transition={{ duration: 0.2 }}
             className="fixed inset-0 z-40 lg:hidden"
           >
-            {/* Backdrop */}
             <div
               className="absolute inset-0 bg-[#05061a]/80 backdrop-blur-xl"
               onClick={() => setOpen(false)}
             />
-            {/* Menu panel */}
             <motion.div
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 28, stiffness: 280 }}
-              className="absolute right-0 top-0 h-full w-72 glass-strong border-l border-white/10 flex flex-col pt-24 px-6 pb-8"
+              className="absolute right-0 top-0 h-full w-72 glass-strong border-l border-white/10 flex flex-col pt-24 px-6 pb-8 overflow-y-auto"
             >
               <nav className="space-y-1">
-                {nav.map((item) => (
-                  <button
+                <button
+                  onClick={() => scrollTo("#features", () => setOpen(false))}
+                  className="w-full text-left px-4 py-3.5 rounded-2xl text-base font-semibold text-white/80 hover:text-white hover:bg-white/[0.06] transition"
+                >
+                  Tính năng
+                </button>
+                <div className="px-4 pt-2 pb-1 text-xs text-white/30 uppercase tracking-widest">
+                  Dịch vụ
+                </div>
+                {SERVICE_DROPDOWN.map((item) => (
+                  <a
                     key={item.href}
-                    onClick={() => scrollTo(item.href, () => setOpen(false))}
-                    className="w-full text-left px-4 py-3.5 rounded-2xl text-base font-semibold text-white/80 hover:text-white hover:bg-white/[0.06] transition"
+                    href={item.href}
+                    onClick={() => setOpen(false)}
+                    className="block px-4 py-3 rounded-2xl text-sm text-white/70 hover:text-white hover:bg-white/[0.06] transition"
                   >
                     {item.label}
-                  </button>
+                  </a>
                 ))}
+                <a
+                  href="/bang-gia"
+                  onClick={() => setOpen(false)}
+                  className="block w-full text-left px-4 py-3.5 rounded-2xl text-base font-semibold text-white/80 hover:text-white hover:bg-white/[0.06] transition"
+                >
+                  Bảng giá
+                </a>
+                <a
+                  href="/chay-quang-cao"
+                  onClick={() => setOpen(false)}
+                  className="block w-full text-left px-4 py-3.5 rounded-2xl text-base font-semibold text-white/80 hover:text-white hover:bg-white/[0.06] transition"
+                >
+                  Chạy Quảng Cáo
+                </a>
               </nav>
 
               <div className="mt-auto space-y-3">
-                <button
-                  onClick={() => scrollTo("#pricing", () => setOpen(false))}
+                <a
+                  href="/bang-gia"
+                  onClick={() => setOpen(false)}
                   className="btn-primary w-full flex items-center justify-center gap-2 rounded-2xl py-3.5 text-sm font-semibold text-white transition"
                 >
                   Xem bảng giá →
-                </button>
+                </a>
                 <a
                   href={`tel:${CONTACT.phone}`}
                   className="glass w-full flex items-center justify-center gap-2 rounded-2xl py-3.5 text-sm font-semibold text-white hover:bg-white/[0.08] transition"
@@ -162,6 +256,8 @@ export function Header() {
                 </a>
                 <a
                   href={CONTACT.zalo}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-full flex items-center justify-center gap-2 rounded-2xl py-3.5 text-sm font-semibold text-white/70 hover:text-white transition"
                 >
                   Nhắn Zalo →

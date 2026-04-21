@@ -70,11 +70,11 @@ export function Footer() {
               Dịch vụ
             </div>
             <ul className="mt-4 space-y-2 text-sm text-white/70">
-              <li><a className="hover:text-white transition" href="#pricing">Facebook</a></li>
-              <li><a className="hover:text-white transition" href="#pricing">TikTok</a></li>
-              <li><a className="hover:text-white transition" href="#pricing">YouTube</a></li>
-              <li><a className="hover:text-white transition" href="#pricing">Instagram</a></li>
-              <li><a className="hover:text-white transition" href="#pricing">Google / Map</a></li>
+              <li><a className="hover:text-white transition" href="/bang-gia">Bảng giá</a></li>
+              <li><a className="hover:text-white transition" href="/chay-quang-cao">Chạy Quảng Cáo</a></li>
+              <li><a className="hover:text-white transition" href="/loi-ich">Lợi ích MXH</a></li>
+              <li><a className="hover:text-white transition" href="/#pricing">Facebook / TikTok</a></li>
+              <li><a className="hover:text-white transition" href="/#pricing">YouTube / Instagram</a></li>
             </ul>
           </div>
 
@@ -83,8 +83,8 @@ export function Footer() {
               Hỗ trợ
             </div>
             <ul className="mt-4 space-y-2 text-sm text-white/70">
-              <li><a className="hover:text-white transition" href="#security">Bảo mật</a></li>
-              <li><a className="hover:text-white transition" href="#packages">Gói combo</a></li>
+              <li><a className="hover:text-white transition" href="/#security">Bảo mật</a></li>
+              <li><a className="hover:text-white transition" href="/#packages">Gói combo</a></li>
               <li><a className="hover:text-white transition" href={CONTACT.zalo}>Zalo Support</a></li>
               <li><a className="hover:text-white transition" href={`tel:${CONTACT.phone}`}>Hotline 24/7</a></li>
             </ul>
