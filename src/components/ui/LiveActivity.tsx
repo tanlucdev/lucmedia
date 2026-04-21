@@ -78,7 +78,7 @@ export function LiveActivity() {
   }, []);
 
   return (
-    <div className="fixed bottom-4 left-3 sm:bottom-6 sm:left-4 z-40 flex flex-col-reverse gap-2 pointer-events-none">
+    <div className="hidden sm:flex fixed bottom-4 left-3 sm:bottom-6 sm:left-4 z-40 flex-col-reverse gap-2 pointer-events-none">
       <AnimatePresence mode="popLayout">
         {items.map((a) => (
           <motion.div

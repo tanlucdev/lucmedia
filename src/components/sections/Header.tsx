@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import { Phone, Menu, X, ChevronDown } from "lucide-react";
 import { CONTACT } from "@/data/services";
 
@@ -36,14 +37,14 @@ function ServiceDropdown({ onClose }: { onClose?: () => void }) {
       className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-56 glass-strong rounded-2xl overflow-hidden shadow-xl z-50"
     >
       {SERVICE_DROPDOWN.map((item) => (
-        <a
+        <Link
           key={item.href}
           href={item.href}
           onClick={onClose}
           className="flex items-center px-4 py-3 text-sm text-white/80 hover:text-white hover:bg-white/[0.07] transition"
         >
           {item.label}
-        </a>
+        </Link>
       ))}
     </motion.div>
   );
@@ -52,6 +53,7 @@ function ServiceDropdown({ onClose }: { onClose?: () => void }) {
 export function Header() {
   const [open, setOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -64,6 +66,13 @@ export function Header() {
     document.body.style.overflow = open ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [open]);
+
+  useEffect(() => {
+    const fn = () => setScrolled(window.scrollY > 24);
+    fn();
+    window.addEventListener("scroll", fn, { passive: true });
+    return () => window.removeEventListener("scroll", fn);
+  }, []);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -84,7 +93,10 @@ export function Header() {
         className="sticky top-0 z-50 w-full"
       >
         <div className="mx-auto max-w-7xl px-4 pt-4 lg:pt-5">
-          <div className="glass flex items-center justify-between rounded-2xl px-4 py-3 lg:px-6">
+          <div
+            className="glass flex items-center justify-between rounded-2xl px-4 py-3 lg:px-6 transition-all duration-300"
+            style={scrolled ? { background: "rgba(8,10,36,0.88)", backdropFilter: "blur(24px)" } : undefined}
+          >
             {/* Logo */}
             <a href="/" className="flex items-center gap-2.5 shrink-0">
               <div className="relative h-9 w-9 rounded-xl overflow-hidden shrink-0">
@@ -131,18 +143,18 @@ export function Header() {
                 </AnimatePresence>
               </div>
 
-              <a
+              <Link
                 href="/bang-gia"
                 className="px-4 py-1.5 text-sm text-white/70 hover:text-white rounded-full hover:bg-white/[0.06] transition"
               >
                 Bảng giá
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/chay-quang-cao"
                 className="px-4 py-1.5 text-sm text-white/70 hover:text-white rounded-full hover:bg-white/[0.06] transition"
               >
                 Chạy Quảng Cáo
-              </a>
+              </Link>
               <a
                 href={CONTACT.zalo}
                 target="_blank"
@@ -162,13 +174,13 @@ export function Header() {
                 <Phone className="h-4 w-4" />
                 <span className="font-medium tabular-nums">{CONTACT.phoneDisplay}</span>
               </a>
-              <a
+              <Link
                 href="/bang-gia"
                 className="btn-primary hidden sm:inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-semibold text-white transition"
               >
                 Đặt ngay
                 <span aria-hidden>→</span>
-              </a>
+              </Link>
               {/* Hamburger */}
               <button
                 onClick={() => setOpen((p) => !p)}
@@ -223,30 +235,30 @@ export function Header() {
                     {item.label}
                   </a>
                 ))}
-                <a
+                <Link
                   href="/bang-gia"
                   onClick={() => setOpen(false)}
                   className="block w-full text-left px-4 py-3.5 rounded-2xl text-base font-semibold text-white/80 hover:text-white hover:bg-white/[0.06] transition"
                 >
                   Bảng giá
-                </a>
-                <a
+                </Link>
+                <Link
                   href="/chay-quang-cao"
                   onClick={() => setOpen(false)}
                   className="block w-full text-left px-4 py-3.5 rounded-2xl text-base font-semibold text-white/80 hover:text-white hover:bg-white/[0.06] transition"
                 >
                   Chạy Quảng Cáo
-                </a>
+                </Link>
               </nav>
 
               <div className="mt-auto space-y-3">
-                <a
+                <Link
                   href="/bang-gia"
                   onClick={() => setOpen(false)}
                   className="btn-primary w-full flex items-center justify-center gap-2 rounded-2xl py-3.5 text-sm font-semibold text-white transition"
                 >
                   Xem bảng giá →
-                </a>
+                </Link>
                 <a
                   href={`tel:${CONTACT.phone}`}
                   className="glass w-full flex items-center justify-center gap-2 rounded-2xl py-3.5 text-sm font-semibold text-white hover:bg-white/[0.08] transition"

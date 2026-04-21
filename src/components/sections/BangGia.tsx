@@ -43,10 +43,13 @@ function FaqAccordion() {
   return (
     <div className="space-y-3">
       {FAQ_ITEMS.map((item, i) => (
-        <div key={i} className="glass rounded-2xl overflow-hidden">
+        <div
+          key={i}
+          onClick={() => setOpen(open === i ? null : i)}
+          className="glass rounded-2xl overflow-hidden cursor-pointer hover:bg-white/[0.04] transition"
+        >
           <button
-            onClick={() => setOpen(open === i ? null : i)}
-            className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left text-sm font-semibold text-white hover:bg-white/5 transition"
+            className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left text-sm font-semibold text-white"
           >
             {item.q}
             <ChevronDown

@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 export function AdsBanner() {
   return (
@@ -12,7 +13,7 @@ export function AdsBanner() {
       transition={{ duration: 0.4 }}
       className="mx-auto max-w-7xl px-4 mb-4"
     >
-      <a
+      <Link
         href="/chay-quang-cao"
         className="glass flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 rounded-2xl px-5 py-4 hover:bg-white/[0.07] transition group"
       >
@@ -31,7 +32,7 @@ export function AdsBanner() {
           Tìm hiểu thêm
           <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
         </div>
-      </a>
+      </Link>
     </motion.div>
   );
 }

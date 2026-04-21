@@ -151,7 +151,7 @@ function DashboardCard({
       <motion.div
         animate={{ y: [0, -8, 0] }}
         transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute -left-6 sm:-left-10 top-10 z-20 glass rounded-2xl p-4 shadow-2xl"
+        className="absolute -left-6 sm:-left-10 top-10 z-20 glass rounded-2xl p-4 shadow-2xl hidden sm:block"
       >
         <div className="flex items-center gap-2.5">
           <div className="grid h-9 w-9 place-items-center rounded-xl bg-emerald-500/20 text-emerald-400">
@@ -168,7 +168,7 @@ function DashboardCard({
       <motion.div
         animate={{ y: [0, 8, 0] }}
         transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        className="absolute -right-4 sm:-right-8 top-40 z-20 glass rounded-2xl p-3 shadow-2xl min-w-[140px]"
+        className="absolute -right-4 sm:-right-8 top-40 z-20 glass rounded-2xl p-3 shadow-2xl min-w-[140px] hidden sm:block"
       >
         <AnimatePresence mode="wait">
           <motion.div
