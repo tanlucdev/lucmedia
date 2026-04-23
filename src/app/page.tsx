@@ -8,10 +8,12 @@ import { Security } from "@/components/sections/Security";
 import { MobileCTA } from "@/components/sections/MobileCTA";
 import { Footer } from "@/components/sections/Footer";
 import { LiveActivity } from "@/components/ui/LiveActivity";
+import { Analytics } from "@vercel/analytics/react";
 
 export default function Home() {
   return (
     <>
+      <Analytics />
       <Header />
       <main className="flex-1">
         <Hero />
